@@ -1,8 +1,8 @@
 {
-  "name": "inversify-express-example",
+  "name": "typeorm-mongodb",
   "version": "1.0.0",
-  "description": "Examples for using inversify with expressjs",
-  "author": "lholznagel",
+  "description": "typeorm-mongodb",
+  "author": "kth",
   "license": "MIT",
   "scripts": {
     "dev": "./node_modules/.bin/tsc && NODE_ENV=local node ./dist/bootstrap.js",
