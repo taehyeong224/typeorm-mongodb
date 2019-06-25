@@ -1,6 +1,8 @@
 const TYPES = {
     TestService: Symbol.for("TestService"),
-    TestDao: Symbol.for("TestDao")
+    UserService: Symbol.for("UserService"),
+    TestDao: Symbol.for("TestDao"),
+    UserDao: Symbol.for("UserDao")
 };
 
 export default TYPES;

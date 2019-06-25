@@ -1,10 +1,10 @@
 import { ENV } from "../util/enum";
-import { Test } from "../entity/Test";
+import { Test, User } from "../entity";
 import { MongoConnectionOptions } from "typeorm/driver/mongodb/MongoConnectionOptions";
 
 let config: MongoConnectionOptions;
-const entities = [Test];
-
+const entities = [Test, User];
+console.log("entities : ", entities);
 if (process.env.NODE_ENV === ENV.local) {
     config = {
         type: "mongodb",

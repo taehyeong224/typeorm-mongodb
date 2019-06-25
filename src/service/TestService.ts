@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import TYPES from "../constant/types";
-import { TestDao } from '../Dao/TestDao';
+import { TestDao } from '../dao/TestDao';
 import { Test } from '../entity/Test';
 import { ErrorModel } from '../util/ErrorModel';
 import { errorCode, category } from '../config/ErrorCode';
@@ -21,13 +21,7 @@ export class TestService {
     }
 
     public async insert(body): Promise<Test> {
-        const test: Test = new Test();
-        test.name = "야호";
-        test.options = {
-            isGood: true,
-            max: 2,
-            min: 1
-        }
+        const test: Test = new Test(body.name, body.options);
         test.regDate = new Date();
         test.modDate = new Date();
         return this.testDao.insert(test);

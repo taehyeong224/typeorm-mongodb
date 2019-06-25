@@ -7,16 +7,24 @@ import * as bodyParser from 'body-parser';
 import * as cookieParser from "cookie-parser";
 import TYPES from './constant/types';
 import './controller/TestController';
+import './controller/UserController';
 import { Request, Response, NextFunction } from "express";
-import { AbstractDao } from './Dao/base/AbstractDao';
+import { AbstractDao } from './dao/base/AbstractDao';
 import { TestService } from './service/TestService';
-import { TestDao } from './Dao/TestDao';
+import { TestDao } from './dao/TestDao';
 import { Test } from './entity/Test';
 import { typeormConfig } from './config/mongodb';
+import { UserService } from './service/UserService';
+import { User } from './entity/User';
+import { UserDao } from './dao/UserDao';
 // load everything needed to the Container
 let container = new Container();
-container.bind<TestService>(TYPES.TestService).to(TestService).inRequestScope();
+container.bind<TestService>(TYPES.TestService).to(TestService).inSingletonScope();
+container.bind<UserService>(TYPES.UserService).to(UserService).inSingletonScope();
 container.bind<AbstractDao<Test>>(TYPES.TestDao).to(TestDao).inSingletonScope();
+container.bind<AbstractDao<User>>(TYPES.UserDao).to(UserDao).inSingletonScope();
+
+
 
 // start the server
 let server = new InversifyExpressServer(container);

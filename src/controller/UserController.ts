@@ -1,22 +1,22 @@
 import { controller, httpDelete, httpGet, httpPost, httpPatch } from 'inversify-express-utils';
 import { inject } from 'inversify';
-import { TestService } from '../service/TestService';
 import * as express from 'express';
 import TYPES from '../constant/types';
 import { errorHandle } from "../util/util";
 import {ObjectID} from "mongodb";
 import { ErrorModel } from '../util/ErrorModel';
 import { errorCode, category } from '../config/ErrorCode';
+import { UserService } from '../service/UserService';
 
-@controller('/test')
-export class TestController {
+@controller('/user')
+export class UserController {
 
-    constructor(@inject(TYPES.TestService) private testService: TestService) {}
+    constructor(@inject(TYPES.UserService) private userService: UserService) {}
 
     @httpGet('/')
     public async someGet(request: express.Request, response: express.Response) {
         try {
-            const result = await this.testService.getTests();
+            const result = await this.userService.getall();
             console.log("result :", result);
             response.status(200).json({ msg: "success", data: result, kk: "hi" });
         } catch (e) {
@@ -33,7 +33,9 @@ export class TestController {
                 throw new ErrorModel(400, errorCode.fieldValid, category.input, "invalid id");
             }
             console.log(ObjectID.isValid(ID));
-            const result = await this.testService.getTestByIdx(ID);
+            const result = await this.userService.findOne(ID, {
+                relations: ["tests"]
+            });
             console.log("result :", result);
             response.status(200).json({ msg: "success", data: result, kk: "hi" });
         } catch (e) {
@@ -45,7 +47,7 @@ export class TestController {
     @httpPost('/')
     public async somePost(request: express.Request, response: express.Response) {
         try {
-            const result = await this.testService.insert(request.body);
+            const result = await this.userService.insert(request.body);
             response.status(201).json({ msg: "success" , result});
         } catch (e) {
             errorHandle(e, response)
@@ -59,7 +61,7 @@ export class TestController {
             if (!ObjectID.isValid(ID)) {
                 throw new ErrorModel(400, errorCode.fieldValid, category.input, "invalid id");
             }
-            const result = await this.testService.update(ID, request.body);
+            const result = await this.userService.update(ID, request.body);
             response.status(200).json({ msg: "success", result });
         } catch (e) {
             console.log("error : ", e);
@@ -70,8 +72,14 @@ export class TestController {
     @httpDelete('/:id')
     public async someDelete(request: express.Request, response: express.Response) {
         try {
+            const ID: string = request.params.id;
+            if (!ObjectID.isValid(ID)) {
+                throw new ErrorModel(400, errorCode.fieldValid, category.input, "invalid id");
+            }
+            await this.userService.remove(ID);
             response.status(204).json({});
         } catch (e) {
+            console.error("remove error : ", e);
             errorHandle(e, response)
         }
     }

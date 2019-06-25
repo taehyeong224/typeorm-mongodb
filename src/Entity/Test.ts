@@ -15,6 +15,11 @@ export class Test {
 
     @Column()
     modDate: Date;
+
+    constructor(name: string, options: TestOption) {
+        this.name = name;
+        this.options = options;
+    }
 }
 
 interface TestOption {
